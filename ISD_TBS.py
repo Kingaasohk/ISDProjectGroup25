@@ -350,7 +350,7 @@ def book_taxi(customer_id, name, full_pickup_address, full_dropoff_address):
             return
 
         elif num_of_children + num_of_adults != num_of_passengers:
-            print("TAXI BOOKING CANCELLED! Adult and Child count does not match the total number of passengers. Please Re-try.")
+            print("TAXI BOOKING CANCELLED! Adult and Child count does not match the total number of passengers. Please Re-try. \n")
             return
 
         # Checks if number children exceeds or equals the number of passengers
