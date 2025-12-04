@@ -194,53 +194,37 @@ def view_my_bookings(customer_id):
 
 
 # This function allows a customer to cancel booking/s
+# Function is running without errors but is not working as intended
 def cancel_booking():
     print("\n      ~|Cancel Booking MENU|~       \n")
 
     #Prompts user to enter their Customer ID
     customer_id = input("Enter your Customer ID: ")
-    view_my_bookings(customer_id)  # Shows them their bookings
+    view_my_bookings(customer_id)  # Shows customers their bookings before cancelling
+
+    original_file = "bookings.txt"
+    temp_file = "temp.txt" # A temporary file used to help modify the original bookings.txt file
 
     # Starts off by assuming we haven't found the booking
     booking_cancelled = False
-    # Collects and stores the lines we want to save
-    temp_lines = []
 
     try:
-
-        # Opens bookings.txt as the original file
-        original_file = open("bookings.txt", "r")
-
-
-        # Opens temp.txt as a temporary file to update bookings.txt if changes are made
-        temp_lines = open("temp.txt", "w")
-
-        # Reads each line in original_file
-        for line in original_file:
-
-            #Checks each line for the customer_id entered
-            if line.strip().startswith(customer_id + ','):
-                print("Booking found.")
-                # booking_cancelled is now True because the booking was found
-                booking_cancelled = True
-            else:
-                # Continues to write lines from the original file if it does not begin with the ID entered
-                temp_lines.append(line)
-
-        # Closes original file before removing or renaming it
-        original_file.close()
+        with open(original_file, "r") as file:
+            for line in file:
+                if not line.startswith(customer_id + ','):
+                    file.write(line)
+                else:
+                    booking_found = True
+        os.replace(temp_file, original_file) # Replaces the original file with the temporary file
 
         if booking_cancelled:
-            # Rewrites the bookings.txt file without the cancelled bookings
-            with open("bookings.txt", "w") as file:
-                file.writelines(temp_lines)
-            print(f"All bookings for Customer ID: {customer_id} has been cancelled and removed.")
-
+            print(f"\n All bookings for Customer ID #{customer_id} have been cancelled.")
         else:
-            print("No bookings found for this Customer ID")
+            print("\n No booking found for this Customer ID.")
 
     except FileNotFoundError:
-        print("No bookings found for this Customer ID.")
+        print("No bookings have been made yet.")
+
 
 
 
@@ -289,39 +273,30 @@ def assign_driver():
     lines_to_keep = []
 
     try:
+        with open("bookings.txt", "r") as file:
+            lines_to_keep = file.readlines()
 
-        original_file =  open("bookings.txt", "r")
-
-        # Reads each line in original_file
-        for line in original_file:
+        for i, line in enumerate(lines_to_keep):
             if line.strip().startswith(booking_id + ','):
-
-                #If the booking is found it checks if it currently has "Pending,None"
-                if ',Pending,None' in line:
-                    # Replaces and updates the Pending status and with Assigned and the Driver ID
-                    update_status = line.strip().replace(",Pending,None", f",Assigned,{driver_id}") + "\n"
-                    # Adds the updated line to the temporary list
-                    lines_to_keep.append(update_status)
-
-                    #
+                if ",Pending,None" in line:
+                    updated_status = line.strip().replace(",Pending,None", f",Assigned,{driver_id}\n")
+                    lines_to_keep[i] = updated_status
                     updated_booking_status = True
-                    print(f"Booking #{booking_id} Found.")
-                    print("Updating Status...")
+                    print(f"Bookings #{booking_id} Found. Updating Status...")
                 else:
-                    lines_to_keep.append(line)
-                    print(f"Booking #{booking_id} Status is NOT Pending and is Assigned.")
-            else:
-                lines_to_keep.append(line)
-        original_file.close()
+                    print(f"Booking #{booking_id} has already been assigned. 《Status Unchanged》")
 
         if updated_booking_status:
             with open("bookings.txt", "w") as file:
-                file.writelines()
-            print(f"Booking #{booking_id} was successfully assigned to Driver{driver_id}")
+                file.writelines(lines_to_keep)
+            print(f"Booking #{booking_id} was successfully assigned to Driver #{driver_id}")
+        elif not updated_booking_status and booking_id in [line.split(',')[0] for line in lines_to_keep]:
+            print(f"Failed to assign Booking #{booking_id}. 《Status Unchanged》")
         else:
-            print(f"Booking #{booking_id} Status is NOT Pending.")
+            print(f"Booking with ID #{booking_id} not found.")
     except FileNotFoundError:
-        print("No bookings found...")
+        print("No bookings found to assign...")
+
 
 
 
@@ -405,9 +380,9 @@ def book_taxi(customer_id, name, full_pickup_address, full_dropoff_address):
         driver_id = "None"
 
         with open("bookings.txt", "a") as file:
-            file.write(f"{booking_id}, {customer_id}, {full_booking}, {status}, {driver_id}")
+            file.write(f"{booking_id}, {customer_id}, {full_booking}, {status}, {driver_id}\n")
 
-        print(f"Your Trip Booking #{booking_id} has been assigned to one of our Drivers. ")
+        print(f"Your Trip Booking #{booking_id} has been made and pending driver assignment.")
 
     elif taxi_booking.lower() == "no":
         print("You've chosen not to book with us. Hope to see you soon!")
