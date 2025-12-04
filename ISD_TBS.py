@@ -7,7 +7,8 @@ def main_menu():
         print("1. Customer \n")
         print("2. Driver \n")
         print("3. Admin \n")
-        print("4. Exit \n")
+        print("4. Register \n")
+        print("5. Exit \n")
 
         option = input("Select an option (1-4): \n")
 
@@ -22,8 +23,12 @@ def main_menu():
         elif option == '3':
             print("\n      ~|Admin MENU|~       \n")
             admin_menu()
-
+            
         elif option == '4':
+            print("\n~|Registration Menu|~\n")
+            register_menu()
+			
+        elif option == '5':
             print("\n      ~|Exit MENU|~       \n")
             print("You've chosen to exit...")
             print("Hope to see you Soon!")
@@ -32,6 +37,39 @@ def main_menu():
         else:
             print("\n Selection Invalid...Option selected does not exist... \n ")
             print("\n      《°°°Returning to Main Menu°°°》       \n")
+
+def register_func(role_select, user_name, user_password):
+	
+    return
+
+def register_menu():
+	
+	register_confirm = input("Do you want to register with us as a User,Driver or Admin? (yes/no): \n")
+	print(register_confirm)
+	if register_confirm.lower == "yes":
+		while True:
+			role_select = input("Admin or Driver: \n")
+			if role_select == "Admin" or "admin":
+				user_name = input("Input your username: \n")
+				user_password = input("Input your password: \n")
+				register_func(role_select, user_name,user_password)
+			elif role_select == "Driver" or "driver":
+				user_name = input("Input your username: \n")
+				user_password = input("Input your password: \n")
+				register_func(user_name,user_password)
+			elif role_select == "User" or "user":
+				user_name = input("Input your username: \n")
+				user_password = input("Input your password: \n")
+				register_func(user_name,user_password)
+		else:
+			print("Invalid option returning...")
+			return
+	elif register_confirm.lower == "no":
+		print("Debug String \n" + register_confirm)
+		return
+
+
+
 
 # This function displays the Customer MENU options
 def customer_menu():
