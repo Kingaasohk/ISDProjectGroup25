@@ -39,34 +39,163 @@ def main_menu():
             print("\n      《°°°Returning to Main Menu°°°》       \n")
 
 def register_func(role_select, user_name, user_password):
-	
-    return
+    # Ensure username is unique
+    users = []
+    try:
+        with open("users.txt", "r") as f:
+            for line in f:
+                parts = line.strip().split(',')
+                if parts:
+                    users.append(parts[0])
+    except FileNotFoundError:
+        pass
+
+    # Basic validation
+    if not user_name or not user_name.strip():
+        print("Username cannot be empty.")
+        return False
+    if ',' in user_name or ',' in user_password:
+        print("Username and password cannot contain comma character.")
+        return False
+    if len(user_password) < 6:
+        print("Password must be at least 6 characters long.")
+        return False
+    if user_name in users:
+        print("Username already exists. Please try a different username.")
+        return False
+
+    # For Users/Drivers/Admins, collect profile details and create a linked record
+    linked_id = ""
+    if role_select.lower() == "user":
+        print("\nRegistering a new Customer profile:")
+        name = input("Full name: \n")
+        phone = input("Phone number: \n")
+        email = input("Email address: \n")
+        linked_id = save_customer(name, phone, email)
+    elif role_select.lower() == "driver":
+        print("\nRegistering a new Driver profile:")
+        name = input("Full name: \n")
+        phone = input("Phone number: \n")
+        email = input("Email address: \n")
+        linked_id = save_driver(name, phone, email)
+    elif role_select.lower() == "admin":
+        print("\nRegistering a new Admin profile:")
+        name = input("Full name: \n")
+        email = input("Email address: \n")
+        linked_id = save_admin(name, email)
+
+    # Persist user login (username,password,role,linked_id)
+    with open("users.txt", "a") as f:
+        f.write(f"{user_name},{user_password},{role_select},{linked_id}\n")
+
+    print(f"Registration successful for {user_name} as {role_select}.")
+    return True
 
 def register_menu():
-	
-	register_confirm = input("Do you want to register with us as a User,Driver or Admin? (yes/no): \n")
-	print(register_confirm)
-	if register_confirm.lower == "yes":
-		while True:
-			role_select = input("Admin or Driver: \n")
-			if role_select == "Admin" or "admin":
-				user_name = input("Input your username: \n")
-				user_password = input("Input your password: \n")
-				register_func(role_select, user_name,user_password)
-			elif role_select == "Driver" or "driver":
-				user_name = input("Input your username: \n")
-				user_password = input("Input your password: \n")
-				register_func(user_name,user_password)
-			elif role_select == "User" or "user":
-				user_name = input("Input your username: \n")
-				user_password = input("Input your password: \n")
-				register_func(user_name,user_password)
-		else:
-			print("Invalid option returning...")
-			return
-	elif register_confirm.lower == "no":
-		print("Debug String \n" + register_confirm)
-		return
+    register_confirm = input("Do you want to register with us as a User, Driver or Admin? (yes/no): \n")
+    if register_confirm.strip().lower() == "yes":
+        while True:
+            role_select = input("Choose role (Admin/Driver/User) or type 'back' to cancel: \n").strip().lower()
+            if role_select == "admin":
+                user_name = input("Input your username: \n")
+                user_password = input("Input your password: \n")
+                if register_func("Admin", user_name, user_password):
+                    break
+            elif role_select == "driver":
+                user_name = input("Input your username: \n")
+                user_password = input("Input your password: \n")
+                if register_func("Driver", user_name, user_password):
+                    break
+            elif role_select == "user":
+                user_name = input("Input your username: \n")
+                user_password = input("Input your password: \n")
+                if register_func("User", user_name, user_password):
+                    break
+            elif role_select == "back":
+                print("Registration cancelled. Returning to main menu.")
+                return
+            else:
+                print("Invalid option. Please enter Admin, Driver, User or back.")
+        return
+    elif register_confirm.strip().lower() == "no":
+        print("Registration cancelled.")
+        return
+
+
+def login_user():
+    username = input("Username: \n").strip()
+    password = input("Password: \n").strip()
+    try:
+        with open("users.txt", "r") as f:
+            for line in f:
+                parts = [p.strip() for p in line.strip().split(',')]
+                if len(parts) >= 3:
+                    u, p, role = parts[0], parts[1], parts[2]
+                    linked = parts[3] if len(parts) > 3 else ""
+                    if u == username and p == password:
+                        return u, role, linked
+    except FileNotFoundError:
+        pass
+    print("Login failed: invalid username or password.")
+    return None
+
+
+def get_customer_info(customer_id):
+    try:
+        with open("customers.txt", "r") as f:
+            for line in f:
+                parts = [p.strip() for p in line.strip().split(',')]
+                if parts and parts[0] == str(customer_id):
+                    # customer_id,name,phone,email
+                    return parts[1], parts[2], parts[3]
+    except FileNotFoundError:
+        pass
+    return None, None, None
+
+
+def booking_details():
+    name_prompt = "\nEnter pickup details"
+    pickup_street_num = input("\n Enter your pickup location's street/building number: #")
+    pickup_street_name = input("\n Enter your pickup location's street name: \n ")
+    pickup_city = input("\n Enter your pickup location's city name: \n ")
+    pickup_date = input("Enter the date for your taxi booking (DD/MM/YYYY): ")
+    pickup_time = input("Enter the time for your taxi booking (HH:MM): ")
+
+    full_pickup_address = (f"#{pickup_street_num} {pickup_street_name}, {pickup_city} on {pickup_date} at {pickup_time}")
+    print(f"\n Pickup Location is: {full_pickup_address}")
+
+    dropoff_street_num = input("\n Enter your drop-off location's street/building number: #")
+    dropoff_street_name = input("\n Enter your drop-off location's street name: ")
+    dropoff_city = input("\n Enter your drop-off location's city name: ")
+    full_dropoff_address = (f"#{dropoff_street_num} {dropoff_street_name}, {dropoff_city}")
+    print(f"\n Drop-off Location is: {full_dropoff_address}")
+
+    return full_pickup_address, full_dropoff_address
+
+
+def update_user_linked_id(username, new_linked_id):
+    try:
+        lines = []
+        with open("users.txt", "r") as f:
+            lines = f.readlines()
+    except FileNotFoundError:
+        return False
+
+    updated = False
+    for i, line in enumerate(lines):
+        parts = [p.strip() for p in line.strip().split(',')]
+        if parts and parts[0] == username:
+            while len(parts) < 4:
+                parts.append("")
+            parts[3] = str(new_linked_id)
+            lines[i] = ','.join(parts) + '\n'
+            updated = True
+            break
+
+    if updated:
+        with open("users.txt", "w") as f:
+            f.writelines(lines)
+    return updated
 
 
 
@@ -85,15 +214,35 @@ def customer_menu():
 
         # Allows users to enter details and create a taxi booking
         if option == '1':
-            # Calls on user_input() and collects user details
-            name, full_pickup_address, full_dropoff_address, phone_num, email = user_input()
+            print("\nPlease login to book a taxi. If you don't have an account, choose Register from the Main Menu.\n")
+            auth = login_user()
+            if not auth:
+                input("Press Enter to continue")
+                continue
+            username, role, linked = auth
+            if role.strip().lower() != 'user':
+                print("Only customers (role 'User') can book taxis. Please register as a User first.")
+                input("Press Enter to continue")
+                continue
 
-            # Calls on save_customer() and saves it to customers.txt
-            customer_id = save_customer(name, phone_num, email)
+            customer_id = linked
+            # If the user account has no linked customer profile, create one now
+            if not customer_id:
+                print("No customer profile found for this account. Please provide profile details now.")
+                name = input("Full name: \n")
+                phone = input("Phone number: \n")
+                email = input("Email address: \n")
+                customer_id = save_customer(name, phone, email)
+                # update users.txt to link this account
+                update_user_linked_id(username, customer_id)
+            else:
+                name, phone, email = get_customer_info(customer_id)
+
+            # Get booking-specific details (pickup/dropoff)
+            full_pickup_address, full_dropoff_address = booking_details()
 
             # Calls on book_taxi() and saves it to bookings.txt
-            book_taxi(customer_id, name, full_pickup_address,
-                      full_dropoff_address)
+            book_taxi(customer_id, name, full_pickup_address, full_dropoff_address)
 
             # Prompts user to press enter to move forward
             input("\n Press Enter to continue \n")
@@ -121,74 +270,94 @@ def customer_menu():
 # This function displays the Driver MENU options
 def driver_menu():
     print("\n      ~|Driver LOGIN MENU|~       \n")
-
-    # Prompts drivers to enter Passcode inorder to LOGIN
-    driver_pass = input("Enter your Driver LOGIN Passcode: ")
-
-    # Passcode ALL Drivers have to enter inorder to gain access to the Driver MENU
-    if driver_pass == '41895drive':
-        print("\n      ~|Driver MENU|~       \n")
-        driver_id = int(input("Enter your Driver ID: # "))
-        print(f"\n      ~|Welcome Driver {driver_id}|~       \n")
-
-        # Loop which allow drivers to select options
-        while True:
-
-            print("1. View Assigned Trips  \n")
-            print("2. Return to Main Menu \n")
-
-
-            option = input("Select an option (1-2): \n")
-
-            if option == '1':
-                view_driver_trips(driver_id)
-                input("Press Enter to continue")
-
-            elif option == '2':
-                print("Press Enter to continue")
-                print("\n Returning to Main Menu... \n")
-                break
-            else:
-                print("\n Option selected does not exist...Selection Invalid. \n")
-    else:
-        print("Invalid Driver ID or Passcode.")
+    auth = login_user()
+    if not auth:
         print("\n Returning to Main Menu... \n")
+        return
+
+    username, role, linked = auth
+    if role.strip().lower() != 'driver':
+        print("Access denied: account is not a driver.")
+        print("\n Returning to Main Menu... \n")
+        return
+
+    driver_id = linked
+    # If no linked driver profile exists, prompt to create one
+    if not driver_id:
+        print("No driver profile found for this account. Please provide driver details now.")
+        name = input("Full name: \n")
+        phone = input("Phone number: \n")
+        email = input("Email address: \n")
+        driver_id = save_driver(name, phone, email)
+        update_user_linked_id(username, driver_id)
+
+    print(f"\n      ~|Welcome Driver {driver_id}|~       \n")
+
+    # Loop which allow drivers to select options
+    while True:
+        print("1. View Assigned Trips  \n")
+        print("2. Return to Main Menu \n")
+
+        option = input("Select an option (1-2): \n")
+
+        if option == '1':
+            view_driver_trips(driver_id)
+            input("Press Enter to continue")
+
+        elif option == '2':
+            print("Press Enter to continue")
+            print("\n Returning to Main Menu... \n")
+            break
+        else:
+            print("\n Option selected does not exist...Selection Invalid. \n")
 
 # This function displays the Admin MENU options
 def admin_menu():
-    admin_pass = input("Enter your Admin Passcode: ")
-
-    # Passcode ALL Admins have to enter inorder to gain access to the Admin MENU
-    if admin_pass == '1413914admin':
-        print("\n      ~|Admin MENU|~       \n")
-        print(f"\n    《Welcome Admin!》       \n")
-
-        # Loop which allow drivers to select options
-        while True:
-            print("\n1. View All Bookings  \n")
-            print("2. Assign Driver to Booking  \n")
-            print("3. Return to Main Menu \n")
-
-
-
-            option = input("Select an option (1-3): \n")
-
-            if option == '1':
-                view_all_bookings()
-                input("Press Enter to continue")
-
-            elif option == '2':
-                assign_driver()
-                input("Press Enter to continue")
-
-            elif option == '3':
-                print("\n Returning to Main Menu... \n")
-                break
-            else:
-                print("\n Option selected does not exist...Selection Invalid. \n")
-    else:
-        print("Invalid Admin Passcode.")
+    print("\n      ~|Admin LOGIN MENU|~       \n")
+    auth = login_user()
+    if not auth:
         print("\n Returning to Main Menu... \n")
+        return
+
+    username, role, linked = auth
+    if role.strip().lower() != 'admin':
+        print("Access denied: account is not an admin.")
+        print("\n Returning to Main Menu... \n")
+        return
+
+    admin_id = linked
+    # If no linked admin profile exists, prompt to create one
+    if not admin_id:
+        print("No admin profile found for this account. Please provide admin details now.")
+        name = input("Full name: \n")
+        email = input("Email address: \n")
+        admin_id = save_admin(name, email)
+        update_user_linked_id(username, admin_id)
+
+    print("\n      ~|Admin MENU|~       \n")
+    print(f"\n    《Welcome Admin {admin_id}!》       \n")
+
+    # Loop which allow admins to select options
+    while True:
+        print("\n1. View All Bookings  \n")
+        print("2. Assign Driver to Booking  \n")
+        print("3. Return to Main Menu \n")
+
+        option = input("Select an option (1-3): \n")
+
+        if option == '1':
+            view_all_bookings()
+            input("Press Enter to continue")
+
+        elif option == '2':
+            assign_driver()
+            input("Press Enter to continue")
+
+        elif option == '3':
+            print("\n Returning to Main Menu... \n")
+            break
+        else:
+            print("\n Option selected does not exist...Selection Invalid. \n")
 
 
 # This function generates an ID and saves the customer.
@@ -213,6 +382,36 @@ def save_customer(name, phone_num, email):
     return customer_id  # Returns customer ID
 
 
+def save_driver(name, phone_num, email):
+    # Generates a unique driver ID for each driver
+    try:
+        with open("drivers.txt", "r") as file:
+            driver_id = str(sum(1 for line in file) + 1)
+    except FileNotFoundError:
+        driver_id = '1'
+
+    with open("drivers.txt", "a") as file:
+        file.write(f"{driver_id},{name},{phone_num},{email}\n")
+
+    print(f"\nYour Driver ID : {driver_id}\n")
+    return driver_id
+
+
+def save_admin(name, email):
+    # Generates a unique admin ID for each admin
+    try:
+        with open("admins.txt", "r") as file:
+            admin_id = str(sum(1 for line in file) + 1)
+    except FileNotFoundError:
+        admin_id = '1'
+
+    with open("admins.txt", "a") as file:
+        file.write(f"{admin_id},{name},{email}\n")
+
+    print(f"\nYour Admin ID : {admin_id}\n")
+    return admin_id
+
+
 # This function reads the file and finds bookings for the Customer ID entered.
 def view_my_bookings(customer_id):
     print(f"\n      ~|Bookings for Customer ID: {customer_id}|~       \n")
@@ -220,10 +419,12 @@ def view_my_bookings(customer_id):
         with open("bookings.txt", "r") as file:
             found = False
             for line in file:
-                # The first part of the line is the customer_id
-                if line.startswith(customer_id + ','):
-                    # Print the entire line with the booking details
-                    print(line[len(customer_id) + 1:].strip())
+                # Split only the first two commas: booking_id, customer_id, rest
+                parts = line.split(',', 2)
+                if len(parts) >= 2 and parts[1].strip() == str(customer_id):
+                    # Print the entire line except the booking id and customer id
+                    rest = parts[2].strip() if len(parts) > 2 else ''
+                    print(rest)
                     found = True
             if not found:
                 print("No bookings found for this Customer ID.")
@@ -247,13 +448,17 @@ def cancel_booking():
     booking_cancelled = False
 
     try:
-        with open(original_file, "r") as file:
-            for line in file:
-                if not line.startswith(customer_id + ','):
-                    file.write(line)
-                else:
-                    booking_found = True
-        os.replace(temp_file, original_file) # Replaces the original file with the temporary file
+        with open(original_file, "r") as infile, open(temp_file, "w") as outfile:
+            for line in infile:
+                parts = line.split(',', 2)
+                if len(parts) >= 2 and parts[1].strip() == str(customer_id):
+                    # skip this line (cancel booking)
+                    booking_cancelled = True
+                    continue
+                outfile.write(line)
+
+        # Replace only if temp file was written
+        os.replace(temp_file, original_file)
 
         if booking_cancelled:
             print(f"\n All bookings for Customer ID #{customer_id} have been cancelled.")
@@ -286,7 +491,9 @@ def view_driver_trips(driver_id):
         with open("bookings.txt", "r") as file:
             for line in file:
 
-                if line.strip().endswith(',' + driver_id):
+                # split from the right: ... , status, driver_id
+                parts = line.rsplit(',', 2)
+                if len(parts) >= 3 and parts[2].strip() == str(driver_id):
                     print(line.strip())
                     found = True
 
@@ -315,7 +522,9 @@ def assign_driver():
             lines_to_keep = file.readlines()
 
         for i, line in enumerate(lines_to_keep):
-            if line.strip().startswith(booking_id + ','):
+            # check booking id as the first CSV field
+            first_part = line.split(',', 1)[0].strip()
+            if first_part == booking_id:
                 if ",Pending,None" in line:
                     updated_status = line.strip().replace(",Pending,None", f",Assigned,{driver_id}\n")
                     lines_to_keep[i] = updated_status
@@ -334,35 +543,6 @@ def assign_driver():
             print(f"Booking with ID #{booking_id} not found.")
     except FileNotFoundError:
         print("No bookings found to assign...")
-
-
-
-
-
-def user_input():
-    name = input("\n Please input your name: ")
-    print(f" Welcome {name}!")
-
-    pickup_street_num = input("\n Enter your pickup location's street/building number: #")
-    pickup_street_name = input("\n Enter your pickup location's street name: \n ")
-    pickup_city = input("\n Enter your pickup location's city name: \n ")
-    pickup_date = input("Enter the date for your taxi booking (DD/MM/YYYY): ")
-    pickup_time = input("Enter the time for your taxi booking (HH:MM): ")
-
-    full_pickup_address = (f"#{pickup_street_num} {pickup_street_name}, {pickup_city} on {pickup_date} at {pickup_time}")
-    print(f"\n {name}'s Pickup Location is: {full_pickup_address}")
-
-    dropoff_street_num = input("\n Enter your drop-off location's street/building number: #")
-    dropoff_street_name = input("\n Enter your drop-off location's street name: ")
-    dropoff_city = input("\n Enter your drop-off location's city name: ")
-    full_dropoff_address = (f"#{dropoff_street_num} {dropoff_street_name}, {dropoff_city}")
-    print(f"\n {name}'s Drop-off Location is: {full_dropoff_address}")
-
-    phone_num = input("\n Enter your phone number: ")
-    email = input("\n Enter your email address: ")
-
-    return name, full_pickup_address, full_dropoff_address, phone_num, email
-
 
 # This function saves the booking.
 def book_taxi(customer_id, name, full_pickup_address, full_dropoff_address):
