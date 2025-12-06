@@ -1,5 +1,6 @@
 import os
 
+
 # Main Menu
 def main_menu():
     while True:  # Loop which allow users to choose options
@@ -23,11 +24,11 @@ def main_menu():
         elif option == '3':
             print("\n      ~|Admin MENU|~       \n")
             admin_menu()
-            
+
         elif option == '4':
             print("\n~|Registration Menu|~\n")
             register_menu()
-			
+
         elif option == '5':
             print("\n      ~|Exit MENU|~       \n")
             print("You've chosen to exit...")
@@ -37,6 +38,7 @@ def main_menu():
         else:
             print("\n Selection Invalid...Option selected does not exist... \n ")
             print("\n      《°°°Returning to Main Menu°°°》       \n")
+
 
 def register_func(role_select, user_name, user_password):
     # Ensure username is unique
@@ -90,6 +92,7 @@ def register_func(role_select, user_name, user_password):
 
     print(f"Registration successful for {user_name} as {role_select}.")
     return True
+
 
 def register_menu():
     register_confirm = input("Do you want to register with us as a User, Driver or Admin? (yes/no): \n")
@@ -154,16 +157,18 @@ def get_customer_info(customer_id):
 
 
 def booking_details():
-    name_prompt = "\nEnter pickup details"
+    enter_prompt = print("\n |~Enter Pickup Details~|  \n")
     pickup_street_num = input("\n Enter your pickup location's street/building number: #")
     pickup_street_name = input("\n Enter your pickup location's street name: \n ")
     pickup_city = input("\n Enter your pickup location's city name: \n ")
-    pickup_date = input("Enter the date for your taxi booking (DD/MM/YYYY): ")
-    pickup_time = input("Enter the time for your taxi booking (HH:MM): ")
+    pickup_date = input("\n Enter the date for your taxi booking (DD/MM/YYYY): ")
+    pickup_time = input("\n Enter the time for your taxi booking (HH:MM): ")
 
-    full_pickup_address = (f"#{pickup_street_num} {pickup_street_name}, {pickup_city} on {pickup_date} at {pickup_time}")
+    full_pickup_address = (
+        f"#{pickup_street_num} {pickup_street_name}, {pickup_city} on {pickup_date} at {pickup_time}")
     print(f"\n Pickup Location is: {full_pickup_address}")
 
+    enter_prompt = print("\n |~Enter Drop-off Details~|  \n")
     dropoff_street_num = input("\n Enter your drop-off location's street/building number: #")
     dropoff_street_name = input("\n Enter your drop-off location's street name: ")
     dropoff_city = input("\n Enter your drop-off location's city name: ")
@@ -198,14 +203,12 @@ def update_user_linked_id(username, new_linked_id):
     return updated
 
 
-
-
 # This function displays the Customer MENU options
 def customer_menu():
     # Loop which allow customers to select options
     while True:
 
-        print("\n1. Register and Book a Taxi \n")
+        print("\n1. Book a Taxi \n")
         print("2. View my Booking/s \n")
         print("3. Cancel my Booking/s \n")
         print("4. Return to Main Menu \n")
@@ -267,6 +270,7 @@ def customer_menu():
             # Outputs statement if users don't enter options '1', '2' or '3'
             print("\n Option selected does not exist...Selection Invalid. \n")
 
+
 # This function displays the Driver MENU options
 def driver_menu():
     print("\n      ~|Driver LOGIN MENU|~       \n")
@@ -295,8 +299,8 @@ def driver_menu():
 
     # Loop which allow drivers to select options
     while True:
-        print("1. View Assigned Trips  \n")
-        print("2. Return to Main Menu \n")
+        print("\n 1. View Assigned Trips  \n")
+        print("\n 2. Return to Main Menu \n")
 
         option = input("Select an option (1-2): \n")
 
@@ -310,6 +314,7 @@ def driver_menu():
             break
         else:
             print("\n Option selected does not exist...Selection Invalid. \n")
+
 
 # This function displays the Admin MENU options
 def admin_menu():
@@ -433,16 +438,15 @@ def view_my_bookings(customer_id):
 
 
 # This function allows a customer to cancel booking/s
-# Function is running without errors but is not working as intended
 def cancel_booking():
     print("\n      ~|Cancel Booking MENU|~       \n")
 
-    #Prompts user to enter their Customer ID
+    # Prompts user to enter their Customer ID
     customer_id = input("Enter your Customer ID: ")
     view_my_bookings(customer_id)  # Shows customers their bookings before cancelling
 
     original_file = "bookings.txt"
-    temp_file = "temp.txt" # A temporary file used to help modify the original bookings.txt file
+    temp_file = "temp.txt"  # A temporary file used to help modify the original bookings.txt file
 
     # Starts off by assuming we haven't found the booking
     booking_cancelled = False
@@ -469,8 +473,6 @@ def cancel_booking():
         print("No bookings have been made yet.")
 
 
-
-
 # This function allows Admins to view all bookings made within the system
 def view_all_bookings():
     print("\n      ~|All System Bookings|~       \n")
@@ -480,7 +482,6 @@ def view_all_bookings():
                 print(line.strip())
     except FileNotFoundError:
         print("No bookings to view as yet.")
-
 
 
 def view_driver_trips(driver_id):
@@ -525,8 +526,8 @@ def assign_driver():
             # check booking id as the first CSV field
             first_part = line.split(',', 1)[0].strip()
             if first_part == booking_id:
-                if ",Pending,None" in line:
-                    updated_status = line.strip().replace(",Pending,None", f",Assigned,{driver_id}\n")
+                if ", Pending, None" in line:
+                    updated_status = line.strip().replace(", Pending, None", f",Assigned,{driver_id}\n")
                     lines_to_keep[i] = updated_status
                     updated_booking_status = True
                     print(f"Bookings #{booking_id} Found. Updating Status...")
@@ -544,23 +545,24 @@ def assign_driver():
     except FileNotFoundError:
         print("No bookings found to assign...")
 
+
 # This function saves the booking.
 def book_taxi(customer_id, name, full_pickup_address, full_dropoff_address):
-    taxi_booking = input("\n Would you like to book a taxi with us? (yes/no): ")
+    taxi_booking = input("\n Would you like to confirm and continue with these booking details? (yes/no): ")
 
     if taxi_booking.lower() == "yes":
         print("\n Checking for available drivers...")
 
         try:
             num_of_passengers = int(input("\n Enter the number of passengers for this taxi booking: \n "))
-            num_of_adults = int(input("Enter the number of adults: \n "))
-            num_of_children = int(input("Enter the number of children: \n "))
+            num_of_adults = int(input("\n Enter the number of adults: "))
+            num_of_children = int(input("\n Enter the number of children: \n "))
         except ValueError:
             print("\n Invalid Input. PLEASE Enter numbers only. \n")
             print("\n Booking Cancelled... \n")
             return
 
-        print(f"This booking contains {num_of_adults} Adult/s and {num_of_children} Child/Children. \n")
+        print(f"\n This booking contains {num_of_adults} Adult/s and {num_of_children} Child/Children. \n")
 
         # Checks if number of adults exceeds number of passengers entered
         if num_of_adults > num_of_passengers:
@@ -568,7 +570,8 @@ def book_taxi(customer_id, name, full_pickup_address, full_dropoff_address):
             return
 
         elif num_of_children + num_of_adults != num_of_passengers:
-            print("TAXI BOOKING CANCELLED! Adult and Child count does not match the total number of passengers. Please Re-try. \n")
+            print(
+                "TAXI BOOKING CANCELLED! Adult and Child count does not match the total number of passengers. Please Re-try. \n")
             return
 
         # Checks if number children exceeds or equals the number of passengers
@@ -579,13 +582,13 @@ def book_taxi(customer_id, name, full_pickup_address, full_dropoff_address):
         taxi_type = input("\n Select Taxi type - Regular, Preferred, Premium: ")
         payment = input("\n How will you be paying? - Select either 'Cash' or 'Card': ")
 
-        full_booking = (f"Pickup: {full_pickup_address}"
-                        f"Drop-off: {full_dropoff_address}"
-                        f"Passengers: {num_of_adults} Adult/s, {num_of_children} Child/Children "
-                        f"Taxi type: {taxi_type}"
-                        f"Payment: {payment}")
+        full_booking = (f"Pickup: {full_pickup_address}\n"
+                        f"Drop-off: {full_dropoff_address}\n"
+                        f"Passengers: {num_of_adults} Adult/s, {num_of_children} Child/Children\n"
+                        f"Taxi type: {taxi_type}\n"
+                        f"Payment Method: {payment}\n")
 
-        print("\n Sending information to Drivers....")
+        print("\n Sending information to Drivers....\n")
         print(full_booking)
 
         try:
@@ -611,9 +614,7 @@ def book_taxi(customer_id, name, full_pickup_address, full_dropoff_address):
         print("\n Invalid response. Please enter 'yes' or 'no' ")
 
 
-
 # Calling main_menu function to run program when executed directly
 if __name__ == "__main__":
     main_menu()
-
 
