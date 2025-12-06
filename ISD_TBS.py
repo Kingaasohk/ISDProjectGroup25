@@ -1,5 +1,5 @@
 import os
-
+from datetime import datetime
 
 # Main Menu
 def main_menu():
@@ -44,8 +44,8 @@ def register_func(role_select, user_name, user_password):
     # Ensure username is unique
     users = []
     try:
-        with open("users.txt", "r") as f:
-            for line in f:
+        with open("users.txt", "r") as file:
+            for line in file:
                 parts = line.strip().split(',')
                 if parts:
                     users.append(parts[0])
@@ -175,7 +175,7 @@ def booking_details():
     full_dropoff_address = (f"#{dropoff_street_num} {dropoff_street_name}, {dropoff_city}")
     print(f"\n Drop-off Location is: {full_dropoff_address}")
 
-    return full_pickup_address, full_dropoff_address
+    return full_pickup_address, full_dropoff_address, pickup_date, pickup_time
 
 
 def update_user_linked_id(username, new_linked_id):
@@ -242,11 +242,14 @@ def customer_menu():
                 name, phone, email = get_customer_info(customer_id)
 
             # Get booking-specific details (pickup/dropoff)
-            full_pickup_address, full_dropoff_address = booking_details()
-
+            full_pickup_address, full_dropoff_address, pickup_date, pickup_time = booking_details()
+            booking_available = booking_time_availability(pickup_date, pickup_time)
+            if booking_available == True:
             # Calls on book_taxi() and saves it to bookings.txt
-            book_taxi(customer_id, name, full_pickup_address, full_dropoff_address)
-
+                book_taxi(customer_id, name, full_pickup_address, full_dropoff_address, pickup_date, pickup_time)
+            elif booking_available == False:
+                print("\n A booking already exists at the selected date and time. Please choose a different slot. \n")
+                break
             # Prompts user to press enter to move forward
             input("\n Press Enter to continue \n")
 
@@ -545,9 +548,51 @@ def assign_driver():
     except FileNotFoundError:
         print("No bookings found to assign...")
 
+def booking_time_availability(pickup_date, pickup_time):
+   # This function checks if a booking already exists at the given date and time
+
+    # Convert user input to datetime object
+    try:
+        new_dt = datetime.strptime(pickup_date + " " + pickup_time, "%d/%m/%Y %H:%M")
+    except ValueError:
+        print("Invalid date or time format.")
+        return False
+    
+    try:
+        with open("bookings.txt", "r") as file:
+            for line in file:
+                # Each line: booking_id, customer_id, full_booking, status, driver_id
+                parts = line.split(',')
+                if len(parts) < 3:
+                    continue
+
+                booking_text = parts[2]   # Contains pickup address with date & time
+
+                # Extract the date & time from booking text
+                # The pickup field contains "... on DD/MM/YYYY at HH:MM"
+                if " on " in booking_text and " at " in booking_text:
+                    try:
+                        section = booking_text.split("Pickup: ")[1]
+                        date_part = section.split(" on ")[1].split(" at ")[0]
+                        time_part = section.split(" at ")[1].split("\\n")[0]
+                        
+                        existing_dt = datetime.strptime(date_part + " " + time_part, "%d/%m/%Y %H:%M")
+
+                        # Compare datetimes
+                        if existing_dt == new_dt:
+                            return False   # Found overlapping booking
+
+                    except Exception:
+                        continue
+
+    except FileNotFoundError:
+        return True  # No bookings exist yet → no conflict
+
+    return True  # No overlap found
 
 # This function saves the booking.
-def book_taxi(customer_id, name, full_pickup_address, full_dropoff_address):
+def book_taxi(customer_id, name, full_pickup_address, full_dropoff_address, pickup_date, pickup_time):
+    
     taxi_booking = input("\n Would you like to confirm and continue with these booking details? (yes/no): ")
 
     if taxi_booking.lower() == "yes":
