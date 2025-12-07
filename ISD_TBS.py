@@ -1,6 +1,7 @@
 import os
 from datetime import datetime
 
+
 # Main Menu
 def main_menu():
     while True:  # Loop which allow users to choose options
@@ -245,7 +246,7 @@ def customer_menu():
             full_pickup_address, full_dropoff_address, pickup_date, pickup_time = booking_details()
             booking_available = booking_time_availability(pickup_date, pickup_time)
             if booking_available == True:
-            # Calls on book_taxi() and saves it to bookings.txt
+                # Calls on book_taxi() and saves it to bookings.txt
                 book_taxi(customer_id, name, full_pickup_address, full_dropoff_address, pickup_date, pickup_time)
             elif booking_available == False:
                 print("\n A booking already exists at the selected date and time. Please choose a different slot. \n")
@@ -427,7 +428,7 @@ def view_my_bookings(customer_id):
         with open("bookings.txt", "r") as file:
             found = False
             for line in file:
-                # Split only the first two commas: booking_id, customer_id, rest
+                # Splits the first two commas: booking_id, customer_id, rest
                 parts = line.split(',', 2)
                 if len(parts) >= 2 and parts[1].strip() == str(customer_id):
                     # Print the entire line except the booking id and customer id
@@ -448,32 +449,75 @@ def cancel_booking():
     customer_id = input("Enter your Customer ID: ")
     view_my_bookings(customer_id)  # Shows customers their bookings before cancelling
 
-    original_file = "bookings.txt"
-    temp_file = "temp.txt"  # A temporary file used to help modify the original bookings.txt file
+    print("\n      ~|Cancelling Booking Options|~       \n")
+    print("1. Cancel a Specific Booking\n")
+    print("2. Cancel All my Bookings\n")
+    print("3. Return to Customer MENU\n")
 
-    # Starts off by assuming we haven't found the booking
-    booking_cancelled = False
+    option = input("Select an option (1-3): \n")
 
-    try:
-        with open(original_file, "r") as infile, open(temp_file, "w") as outfile:
-            for line in infile:
-                parts = line.split(',', 2)
-                if len(parts) >= 2 and parts[1].strip() == str(customer_id):
-                    # skip this line (cancel booking)
-                    booking_cancelled = True
-                    continue
-                outfile.write(line)
+    if option == '1':
+        # Cancels specific booking
+        booking_id = input("\n Enter the Booking ID of the trip you want to cancel: # ")
 
-        # Replace only if temp file was written
-        os.replace(temp_file, original_file)
+        original_file = "bookings.txt"
+        temp_file = "temp.txt"
+        booking_cancelled = False
 
-        if booking_cancelled:
-            print(f"\n All bookings for Customer ID #{customer_id} have been cancelled.")
+        try:
+            with open(original_file, "r") as infile, open(temp_file, "w") as outfile:
+                for line in infile:
+                    parts = line.split(',', 2)
+                    # Checks if line has Booking ID and Customer ID
+                    if len(parts) >= 2 and parts[0].strip() == booking_id and parts[1]:
+                        booking_cancelled = True
+                        continue
+                    outfile.write(line)
+
+            os.replace(temp_file, original_file)
+
+            if booking_cancelled:
+                print(f"\nBooking #{booking_id} has been cancelled.")
+            else:
+                print(f"\nBooking #{booking_id} not found.")
+
+        except FileNotFoundError:
+            print("No bookings have been made yet.")
+
+    elif option == '2':
+        # Cancel all bookings
+        confirm = input("\nAre you sure you want to cancel ALL bookings? (yes/no): ").strip().lower()
+
+        if confirm == 'yes':
+            original_file = "bookings.txt"
+            temp_file = "temp.txt"
+            booking_cancelled = False
+
+            try:
+                with open(original_file, "r") as infile, open(temp_file, "w") as outfile:
+                    for line in infile:
+                        parts = line.split(',', 2)
+                        if len(parts) >= 2 and parts[1].strip() == customer_id:
+                            booking_cancelled = True
+                            continue
+                        outfile.write(line)
+
+                os.replace(temp_file, original_file)
+
+                if booking_cancelled:
+                    print(f"\nAll bookings for Customer ID #{customer_id} have been cancelled.")
+                else:
+                    print("\nNo bookings found for this Customer ID.")
+
+            except FileNotFoundError:
+                print("No bookings have been made yet.")
         else:
-            print("\n No booking found for this Customer ID.")
+            print("\nCancellation cancelled.")
 
-    except FileNotFoundError:
-        print("No bookings have been made yet.")
+    elif option == '3':
+        print("\nReturning to Customer MENU...")
+    else:
+        print("\nInvalid option.")
 
 
 # This function allows Admins to view all bookings made within the system
@@ -548,8 +592,9 @@ def assign_driver():
     except FileNotFoundError:
         print("No bookings found to assign...")
 
+
 def booking_time_availability(pickup_date, pickup_time):
-   # This function checks if a booking already exists at the given date and time
+    # This function checks if a booking already exists at the given date and time
 
     # Convert user input to datetime object
     try:
@@ -557,7 +602,7 @@ def booking_time_availability(pickup_date, pickup_time):
     except ValueError:
         print("Invalid date or time format.")
         return False
-    
+
     try:
         with open("bookings.txt", "r") as file:
             for line in file:
@@ -566,7 +611,7 @@ def booking_time_availability(pickup_date, pickup_time):
                 if len(parts) < 3:
                     continue
 
-                booking_text = parts[2]   # Contains pickup address with date & time
+                booking_text = parts[2]  # Contains pickup address with date & time
 
                 # Extract the date & time from booking text
                 # The pickup field contains "... on DD/MM/YYYY at HH:MM"
@@ -575,12 +620,12 @@ def booking_time_availability(pickup_date, pickup_time):
                         section = booking_text.split("Pickup: ")[1]
                         date_part = section.split(" on ")[1].split(" at ")[0]
                         time_part = section.split(" at ")[1].split("\\n")[0]
-                        
+
                         existing_dt = datetime.strptime(date_part + " " + time_part, "%d/%m/%Y %H:%M")
 
                         # Compare datetimes
                         if existing_dt == new_dt:
-                            return False   # Found overlapping booking
+                            return False  # Found overlapping booking
 
                     except Exception:
                         continue
@@ -590,9 +635,9 @@ def booking_time_availability(pickup_date, pickup_time):
 
     return True  # No overlap found
 
+
 # This function saves the booking.
 def book_taxi(customer_id, name, full_pickup_address, full_dropoff_address, pickup_date, pickup_time):
-    
     taxi_booking = input("\n Would you like to confirm and continue with these booking details? (yes/no): ")
 
     if taxi_booking.lower() == "yes":
@@ -627,11 +672,11 @@ def book_taxi(customer_id, name, full_pickup_address, full_dropoff_address, pick
         taxi_type = input("\n Select Taxi type - Regular, Preferred, Premium: ")
         payment = input("\n How will you be paying? - Select either 'Cash' or 'Card': ")
 
-        full_booking = (f"Pickup: {full_pickup_address}\n"
-                        f"Drop-off: {full_dropoff_address}\n"
-                        f"Passengers: {num_of_adults} Adult/s, {num_of_children} Child/Children\n"
-                        f"Taxi type: {taxi_type}\n"
-                        f"Payment Method: {payment}\n")
+        full_booking = (f"Pickup: {full_pickup_address} | Drop-off: {full_dropoff_address}"
+                        f"| Passengers: {num_of_passengers}"
+                        f"| {num_of_adults} Adult/s, {num_of_children} Child/Children"
+                        f"| Taxi type: {taxi_type}"
+                        f"| Payment Method: {payment}")
 
         print("\n Sending information to Drivers....\n")
         print(full_booking)
@@ -647,7 +692,8 @@ def book_taxi(customer_id, name, full_pickup_address, full_dropoff_address, pick
         driver_id = "None"
 
         with open("bookings.txt", "a") as file:
-            file.write(f"{booking_id}, {customer_id}, {full_booking}, {status}, {driver_id}\n")
+            file.write(f"{booking_id}, {customer_id}, "
+                       f"{full_booking}, {status}, {driver_id}\n")
 
         print(f"Your Trip Booking #{booking_id} has been made and pending driver assignment.")
 
@@ -662,4 +708,3 @@ def book_taxi(customer_id, name, full_pickup_address, full_dropoff_address, pick
 # Calling main_menu function to run program when executed directly
 if __name__ == "__main__":
     main_menu()
-
