@@ -592,48 +592,47 @@ def assign_driver():
     except FileNotFoundError:
         print("No bookings found to assign...")
 
-
 def booking_time_availability(pickup_date, pickup_time):
-    # This function checks if a booking already exists at the given date and time
-
-    # Convert user input to datetime object
-    try:
-        new_dt = datetime.strptime(pickup_date + " " + pickup_time, "%d/%m/%Y %H:%M")
-    except ValueError:
-        print("Invalid date or time format.")
-        return False
 
     try:
         with open("bookings.txt", "r") as file:
-            for line in file:
-                # Each line: booking_id, customer_id, full_booking, status, driver_id
-                parts = line.split(',')
-                if len(parts) < 3:
+            for raw_line in file:
+                line = raw_line.strip()
+
+                # Skip empty or corrupted lines
+                if not line or "Pickup:" not in line:
                     continue
 
-                booking_text = parts[2]  # Contains pickup address with date & time
+                # Find the pickup section safely
+                try:
+                    pickup_section = line.split("Pickup:", 1)[1]
+                except:
+                    continue
 
-                # Extract the date & time from booking text
-                # The pickup field contains "... on DD/MM/YYYY at HH:MM"
-                if " on " in booking_text and " at " in booking_text:
-                    try:
-                        section = booking_text.split("Pickup: ")[1]
-                        date_part = section.split(" on ")[1].split(" at ")[0]
-                        time_part = section.split(" at ")[1].split("\\n")[0]
+                # Extract the date
+                if " on " not in pickup_section or " at " not in pickup_section:
+                    continue
 
-                        existing_dt = datetime.strptime(date_part + " " + time_part, "%d/%m/%Y %H:%M")
+                try:
+                    after_on = pickup_section.split(" on ", 1)[1]
+                    date_part = after_on.split(" at ", 1)[0].strip()
 
-                        # Compare datetimes
-                        if existing_dt == new_dt:
-                            return False  # Found overlapping booking
+                    # Extract time (before next pipe '|')
+                    after_at = after_on.split(" at ", 1)[1]
+                    time_part = after_at.split("|", 1)[0].strip()
 
-                    except Exception:
-                        continue
+                except:
+                    continue
+
+                # Compare
+                if date_part == pickup_date and time_part == pickup_time:
+                    return False  # Found overlapping booking
 
     except FileNotFoundError:
-        return True  # No bookings exist yet → no conflict
+        return True
 
-    return True  # No overlap found
+    return True
+
 
 
 # This function saves the booking.
