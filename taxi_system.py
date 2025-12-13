@@ -147,7 +147,7 @@ def booking_details():
 
 
 # This Function creates a new taxi booking
-def book_taxi(customer_id, name, full_pickup_address, full_dropoff_address,
+def book_taxi(customer_id,full_pickup_address, full_dropoff_address,
               num_of_passengers, num_of_adults, num_of_children, taxi_type, payment):
 
 
