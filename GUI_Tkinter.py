@@ -15,42 +15,53 @@ ADMIN_PASSCODE = "ADMIN149"
 # Global reference for root window
 root = None
 
+
 def show_main_menu():
     clear_window()
-    root.configure(bg="white")
-    title_label = Label(root, text="Welcome to A & A's Taxi Booking System",
-                        font=("Times New Roman", 24, "bold"), bg="white")
-    title_label.pack(pady=40)
+    root.configure(bg="#34495E")
+
+    #Title
+    title_label = Label(root, text="Welcome To",
+                        font=("Times New Roman", 24, "bold"), bg="#34495E", fg="gold")
+    title_label.pack(pady=20)
+
+    # Subtitle
+    subtitle_label = Label(root, text="A & A's TAXI Booking System",
+                           font=("Times New Roman", 20),
+                           bg="#34495E", fg="gold")
+    subtitle_label.pack(pady=10)
+
     # Customer Login button
     customer_btn = Button(root, text="Customer Login", width=30, height=2,
                           font=("Times New Roman", 14, "bold"),
-                          bg="blue", fg="white", command=show_customer_login)
+                          bg="lightblue", command=show_customer_login)
     customer_btn.pack(pady=10)
     # Driver Login button
     driver_btn = Button(root, text="Driver Login", width=30, height=2,
                         font=("Times New Roman", 14, "bold"),
-                        bg="green", fg="white", command=show_driver_login)
+                        bg="lightgreen", command=show_driver_login)
     driver_btn.pack(pady=10)
     # Admin Login button
     admin_btn = Button(root, text="Admin Login", width=30, height=2,
-                      font=("Times New Roman", 14, "bold"),
-                      bg="red", fg="white", command=show_admin_login)
+                       font=("Times New Roman", 14, "bold"),
+                       bg="lightgrey", command=show_admin_login)
     admin_btn.pack(pady=10)
     # Registration button
     register_btn = Button(root, text="Register New Account", width=30, height=2,
                           font=("Times New Roman", 14, "bold"),
-                            bg="orange", fg="white", command=show_registration)
+                          bg="orange", command=show_registration)
     register_btn.pack(pady=10)
     exit_btn = Button(root, text="Exit Application", width=30, height=2,
                       font=("Times New Roman", 14, "bold"),
-                      bg="gray", fg="white", command=root.quit)
+                      bg="red", command=root.quit)
     exit_btn.pack(pady=10)
 
 
-# This Function prevents the GUI from making errors when switching from pages by remoing all windgests from the window
+# This Function prevents the GUI from making errors when switching from pages by removing all widgets from the window
 def clear_window():
     for widget in root.winfo_children():
         widget.destroy()
+
 
 # Registration MENU
 # This Function displays the registration page for Customer and Driver
@@ -151,21 +162,21 @@ def show_registration():
                       bg="gray", fg="white", command=show_main_menu)
     back_btn.pack(side=LEFT, padx=10)
 
+
 # LOGIN Screens
 
 # This Function displays the Customer LOGIN Screen
 def show_customer_login():
-
     show_login_screen("Customer")
+
 
 # This Function displays the Driver LOGIN Screen
 def show_driver_login():
-
     show_login_screen("Driver")
+
 
 # This Function displays the Admin LOGIN Screen
 def show_admin_login():
-
     clear_window()
     root.configure(bg="white")
 
@@ -239,9 +250,9 @@ def show_admin_login():
                       bg="red", fg="white", command=show_main_menu)
     back_btn.pack(side=LEFT, padx=10)
 
+
 # This Function displays a Login Screen for Customer and Driver roles
 def show_login_screen(role_name):
-
     clear_window()
     root.configure(bg="white")
 
@@ -325,25 +336,26 @@ def show_login_screen(role_name):
                       bg="gray", fg="white", command=show_main_menu)
     back_btn.pack(side=LEFT, padx=10)
 
+
 def show_customer_menu():
     clear_window()
-    root.configure(bg="lightblue")
+    root.configure(bg="#34495E")
 
     # Title with Customer Username entered
-    title_label = Label(root, text="Customer Menu - " + current_username,
-                        font=("Times New Roman", 22, "bold"), bg="lightblue")
+    title_label = Label(root, text="Customer Menu - Welcome! " + current_username,
+                        font=("Times New Roman", 22, "bold"), bg="#34495E", fg="gold")
     title_label.pack(pady=30)
 
     # Book a Taxi button
     book_btn = Button(root, text="Book a Taxi", width=30, height=2,
                       font=("Times New Roman", 14, "bold"),
-                      bg="blue", fg="white", command=show_book_taxi)
+                      bg="lightgreen", command=show_book_taxi)
     book_btn.pack(pady=10)
 
     # View My Bookings button
     view_btn = Button(root, text="View My Bookings", width=30, height=2,
                       font=("Times New Roman", 14, "bold"),
-                      bg="green", fg="white", command=show_view_my_bookings)
+                      bg="orange", command=show_view_my_bookings)
     view_btn.pack(pady=10)
 
     # Logout button
@@ -352,22 +364,22 @@ def show_customer_menu():
                       bg="red", fg="white", command=show_main_menu)
     back_btn.pack(pady=10)
 
+
 # Driver MENU
 def show_driver_menu():
     clear_window()
-    root.configure(bg="lightgreen")
+    root.configure(bg="#34495E")
 
     # Title with Driver Username entered
-    title_label = Label(root, text="Driver Menu - " + current_username,
-                        font=("Times New Roman", 22, "bold"), bg="lightgreen")
+    title_label = Label(root, text="Driver Menu - Welcome! " + current_username,
+                        font=("Times New Roman", 22, "bold"), bg="#34495E", fg="gold")
     title_label.pack(pady=30)
 
     # View Assigned Bookings button
     view_btn = Button(root, text="View Assigned Bookings", width=30, height=2,
                       font=("Times New Roman", 14, "bold"),
-                      bg="green", fg="white", command=show_view_assigned_bookings)
+                      bg="lightgreen", command=show_view_assigned_bookings)
     view_btn.pack(pady=10)
-
 
     # Logout button
     back_btn = Button(root, text="Logout", width=30, height=2,
@@ -380,23 +392,23 @@ def show_driver_menu():
 # This Function shows the Admin Menu and Admin options
 def show_admin_menu():
     clear_window()
-    root.configure(bg="lightgray")
+    root.configure(bg="#34495E")
 
     # Title with Admin Username entered
-    title_label = Label(root, text="Admin Menu - " + current_username,
-                        font=("Times New Roman", 22, "bold"), bg="lightgray")
+    title_label = Label(root, text="Admin Menu - Welcome! " + current_username,
+                        font=("Times New Roman", 22, "bold"), bg="#34495E", fg="gold")
     title_label.pack(pady=30)
 
     # View All Bookings button
     view_btn = Button(root, text="View All Bookings", width=30, height=2,
                       font=("Times New Roman", 14, "bold"),
-                      bg="blue", fg="white", command=show_all_bookings)
+                      bg="lightblue", command=show_all_bookings)
     view_btn.pack(pady=10)
 
     # Assign Driver button
     assign_btn = Button(root, text="Assign Driver to Booking", width=30, height=2,
                         font=("Times New Roman", 14, "bold"),
-                        bg="green", fg="white", command=show_assign_driver)
+                        bg="lightgreen", command=show_assign_driver)
     assign_btn.pack(pady=10)
 
     # Logout button
@@ -405,95 +417,155 @@ def show_admin_menu():
                       bg="red", fg="white", command=show_main_menu)
     back_btn.pack(pady=10)
 
-def show_book_taxi():   
+
+def show_book_taxi():
     clear_window()
     root.configure(bg="white")
 
-    page_frame = Frame(root, bg="white")
-    page_frame.pack(pady=20)
     # Title
     title_label = Label(root, text="Book a Taxi",
                         font=("Times New Roman", 20, "bold"), bg="white")
-    title_label.pack(pady=20)
+    title_label.pack(pady=5)
 
-    # Pickup Location field
-    Label(page_frame, text="Pickup Location:", font=("Times New Roman", 12, "bold"),
-          bg="white").grid(row=0, column=0, sticky=W, padx=10, pady=10)
-    pickup_entry = Entry(page_frame, width=30, font=("Times New Roman", 12))
-    pickup_entry.grid(row=0, column=1, pady=10)
+    # Creates page frame
+    page_frame = Frame(root, bg="white")
+    page_frame.pack(pady=5)
 
-    # Dropoff Location field
-    Label(page_frame, text="Dropoff Location:", font=("Times New Roman", 12, "bold"),
-          bg="white").grid(row=1, column=0, sticky=W, padx=10, pady=10)
-    dropoff_entry = Entry(page_frame, width=30, font=("Times New Roman", 12))
-    dropoff_entry.grid(row=1, column=1, pady=10)
+    # PICKUP Details SECTION
+    pickup_label = Label(page_frame, text="Pickup Details",
+                         font=("Times New Roman", 14, "bold"), bg="white", fg="blue")
+    pickup_label.grid(row=0, column=0, columnspan=4, pady=5, sticky=W, padx=10)
 
-        # Booking Date and Time fields
+    # Pickup Street Number
+    Label(page_frame, text="Street Number:", font=("Times New Roman", 12, "bold"),
+          bg="white").grid(row=1, column=0, sticky=W, pady=3, padx=10)
+    pickup_num = Entry(page_frame, width=5, font=("Times New Roman", 12))
+    pickup_num.grid(row=1, column=1, columnspan=3, sticky=W, pady=3)
+
+    # Pickup Street Name
+    Label(page_frame, text="Street Name:", font=("Times New Roman", 12, "bold"),
+          bg="white").grid(row=2, column=0, sticky=W, pady=3, padx=10)
+    pickup_street = Entry(page_frame, width=40, font=("Times New Roman", 12))
+    pickup_street.grid(row=2, column=1, columnspan=3, sticky=W, pady=3)
+
+    # Pickup City
+    Label(page_frame, text="City:", font=("Times New Roman", 12, "bold"),
+          bg="white").grid(row=3, column=0, sticky=W, pady=3, padx=10)
+    pickup_city = Entry(page_frame, width=40, font=("Times New Roman", 12))
+    pickup_city.grid(row=3, column=1, columnspan=3, sticky=W, pady=3)
+
+    # Date and Time on same row
     Label(page_frame, text="Date (DD/MM/YYYY):", font=("Times New Roman", 12, "bold"),
-            bg="white").grid(row=2, column=0, sticky=W, padx=10, pady=10)
-    date_entry = Entry(page_frame, width=20, font=("Times New Roman", 12))
-    date_entry.grid(row=2, column=1, pady=10)
+          bg="white").grid(row=4, column=0, sticky=W, pady=3, padx=10)
+    date_entry = Entry(page_frame, width=15, font=("Times New Roman", 12))
+    date_entry.grid(row=4, column=1, sticky=W, pady=3, padx=(0, 20))
 
     Label(page_frame, text="Time (HH:MM):", font=("Times New Roman", 12, "bold"),
-            bg="white").grid(row=2, column=2, sticky=W, padx=10, pady=10)
+          bg="white").grid(row=4, column=2, sticky=W, pady=3, padx=10)
     time_entry = Entry(page_frame, width=10, font=("Times New Roman", 12))
-    time_entry.grid(row=2, column=3, pady=10)
+    time_entry.grid(row=4, column=3, sticky=W, pady=3)
 
-        # Number of Passengers field
+    # DROP-OFF Details SECTION
+    dropoff_label = Label(page_frame, text="Drop-off Details",
+                          font=("Times New Roman", 14, "bold"), bg="white", fg="red")
+    dropoff_label.grid(row=5, column=0, columnspan=4, pady=5, sticky=W, padx=10)
+
+    # Drop-off Street Number
+    Label(page_frame, text="Street Number:", font=("Times New Roman", 12, "bold"),
+          bg="white").grid(row=6, column=0, sticky=W, pady=3, padx=10)
+    dropoff_num = Entry(page_frame, width=5, font=("Times New Roman", 12))
+    dropoff_num.grid(row=6, column=1, columnspan=3, sticky=W, pady=3)
+
+    # Drop-off Street Name
+    Label(page_frame, text="Street Name:", font=("Times New Roman", 12, "bold"),
+          bg="white").grid(row=7, column=0, sticky=W, pady=3, padx=10)
+    dropoff_street = Entry(page_frame, width=40, font=("Times New Roman", 12))
+    dropoff_street.grid(row=7, column=1, columnspan=3, sticky=W, pady=3)
+
+    # Drop-off City
+    Label(page_frame, text="City:", font=("Times New Roman", 12, "bold"),
+          bg="white").grid(row=8, column=0, sticky=W, pady=3, padx=10)
+    dropoff_city = Entry(page_frame, width=40, font=("Times New Roman", 12))
+    dropoff_city.grid(row=8, column=1, columnspan=3, sticky=W, pady=3)
+
+    # PASSENGER Details SECTION
+    passenger_label = Label(page_frame, text="Passenger Details",
+                            font=("Times New Roman", 14, "bold"), bg="white", fg="green")
+    passenger_label.grid(row=9, column=0, columnspan=4, pady=5, sticky=W, padx=10)
+
+    # Total Passengers
+    Label(page_frame, text="Total Passengers:", font=("Times New Roman", 12, "bold"),
+          bg="white").grid(row=10, column=0, sticky=W, pady=3, padx=10)
+    passengers_entry = Entry(page_frame, width=40, font=("Times New Roman", 12))
+    passengers_entry.grid(row=10, column=1, columnspan=3, sticky=W, pady=3)
+
+    # Adults and Children on same row
     Label(page_frame, text="Number of Passengers:", font=("Times New Roman", 12, "bold"),
-            bg="white").grid(row=3, column=0, sticky=W, padx=10, pady=10)
-    passengers_entry = Entry(page_frame, width=30, font=("Times New Roman", 12))
-    passengers_entry.grid(row=3, column=1, pady=10)
+          bg="white").grid(row=11, column=0, sticky=W, pady=3, padx=10)
 
-    Label(page_frame, text="(Adults + Children)", font=("Times New Roman", 10, "italic"),
-            bg="white").grid(row=3, column=2, sticky=W, padx=10, pady=10)
-    adults_entry = Entry(page_frame, width=10, font=("Times New Roman", 12))
-    adults_entry.grid(row=3, column=3, pady=10)
-    children_entry = Entry(page_frame, width=10, font=("Times New Roman", 12))
-    children_entry.grid(row=3, column=4, pady=10)
-    
+    # Passenger
+    passenger_frame = Frame(page_frame, bg="white")
+    passenger_frame.grid(row=11, column=1, columnspan=3, sticky=W, pady=3)
+
+    Label(passenger_frame, text="Adults:", font=("Times New Roman", 11),
+          bg="white").pack(side=LEFT, padx=(0, 5))
+    adults_entry = Entry(passenger_frame, width=5, font=("Times New Roman", 12))
+    adults_entry.pack(side=LEFT, padx=(0, 20))
+
+    Label(passenger_frame, text="Children:", font=("Times New Roman", 11),
+          bg="white").pack(side=LEFT, padx=(0, 5))
+    children_entry = Entry(passenger_frame, width=5, font=("Times New Roman", 12))
+    children_entry.pack(side=LEFT)
+
+    # Taxi Type
     taxi_type = StringVar()
     taxi_type.set("Standard")
-    # Taxi Type
+
     Label(page_frame, text="Select taxi type:", font=("Times New Roman", 12, "bold"),
-          bg="white").grid(row=4, column=0, sticky=W, padx=10, pady=10)
+          bg="white").grid(row=12, column=0, sticky=W, pady=5, padx=10)
     Radiobutton(page_frame, text="Standard", variable=taxi_type,
-                value="Standard", font=("Times New Roman", 11), 
-                bg="white").grid(row=4, column=1, sticky=W, padx=10, pady=10)
+                value="Standard", font=("Times New Roman", 11),
+                bg="white").grid(row=12, column=1, sticky=W, pady=5)
     Radiobutton(page_frame, text="Premium", variable=taxi_type,
-                value="Premium", font=("Times New Roman", 11), 
-                bg="white").grid(row=4, column=2, sticky=W, padx=10, pady=10)
-    
+                value="Premium", font=("Times New Roman", 11),
+                bg="white").grid(row=12, column=2, sticky=W, pady=5)
+
+    # Payment Method
     payment_method = StringVar()
     payment_method.set("Cash")
-    # Payment Method
+
     Label(page_frame, text="Select payment option:", font=("Times New Roman", 12, "bold"),
-          bg="white").grid(row=5, column=0, sticky=W, padx=10, pady=10)
+          bg="white").grid(row=13, column=0, sticky=W, pady=5, padx=10)
     Radiobutton(page_frame, text="Cash", variable=payment_method,
-                value="Cash", font=("Times New Roman", 11), 
-                bg="white").grid(row=5, column=1, sticky=W, padx=10, pady=10)
+                value="Cash", font=("Times New Roman", 11),
+                bg="white").grid(row=13, column=1, sticky=W, pady=5)
     Radiobutton(page_frame, text="Card", variable=payment_method,
-                value="Card", font=("Times New Roman", 11), 
-                bg="white").grid(row=5, column=2, sticky=W, padx=10, pady=10)
-    
-    
-    
+                value="Card", font=("Times New Roman", 11),
+                bg="white").grid(row=13, column=2, sticky=W, pady=5)
 
     def book_button():
-
         # Stores all the values from the User
-        pickup_location = pickup_entry.get()
-        dropoff_location = dropoff_entry.get()
+        pickup_street_num = pickup_num.get()
+        pickup_street_name = pickup_street.get()
+        pickup_city_name = pickup_city.get()
+
+        dropoff_street_num = dropoff_num.get()
+        dropoff_street_name = dropoff_street.get()
+        dropoff_city_name = dropoff_city.get()
+
         pickup_date = date_entry.get()
         pickup_time = time_entry.get()
         num_of_passengers = passengers_entry.get()
         num_of_adults = adults_entry.get()
         num_of_children = children_entry.get()
-        taxi_selection= taxi_type.get()
-        payment_selection= payment_method.get()
+        taxi_selection = taxi_type.get()
+        payment_selection = payment_method.get()
 
         # Checks if fields are empty
-        if pickup_location == "" or dropoff_location == "" or num_of_passengers == "" or taxi_selection == "" or payment_selection == "":
+        if (pickup_street_num == "" or pickup_street_name == "" or pickup_city_name == "" or
+                dropoff_street_num == "" or dropoff_street_name == "" or dropoff_city_name == "" or
+                pickup_date == "" or pickup_time == "" or num_of_passengers == "" or
+                taxi_selection == "" or payment_selection == ""):
             messagebox.showerror("Error", "All fields are required!")
             return
 
@@ -509,6 +581,10 @@ def show_book_taxi():
         if not system.booking_time_availability(pickup_date, pickup_time):
             messagebox.showerror("Error", "Sorry, a booking already exists at that date and time.")
             return
+
+        # Constructs full addresses from individual fields
+        pickup_location = f"{pickup_street_num} {pickup_street_name}, {pickup_city_name}"
+        dropoff_location = f"{dropoff_street_num} {dropoff_street_name}, {dropoff_city_name}"
 
         # Construct pickup address including date/time so booking has it recorded
         full_pickup_address = pickup_location + f" on {pickup_date} at {pickup_time}"
@@ -530,36 +606,38 @@ def show_book_taxi():
             show_customer_menu()
         else:
             messagebox.showerror("Error", message)
+
     # Creates button frame
     button_frame = Frame(root, bg="white")
-    button_frame.pack(pady=20)
+    button_frame.pack(pady=10)
+
     # Book button
     book_btn = Button(button_frame, text="Book Taxi", width=15, height=2,
-                          font=("Times New Roman", 12, "bold"),
-                            bg="green", fg="white", command=book_button)
-    book_btn.pack(side=LEFT, padx=10)
-
-
+                      font=("Times New Roman", 12, "bold"),
+                      bg="green", fg="white", command=book_button)
+    book_btn.pack(pady=5)
 
     # Back button
-    back_btn = Button(root, text="Back", width=20, height=2,
+    back_btn = Button(button_frame, text="Back", width=15, height=2,
                       font=("Times New Roman", 12),
                       bg="gray", fg="white", command=show_customer_menu)
-    back_btn.pack(pady=10)
+    back_btn.pack(pady=5)
+
 
 def show_view_my_bookings():
     clear_window()
-    root.configure(bg="white")  
+    root.configure(bg="white")
     # Title
     title_label = Label(root, text="My Bookings",
                         font=("Times New Roman", 20, "bold"), bg="white")
     title_label.pack(pady=20)
-    
+
     frame = Frame(root)
     frame.pack(fill=BOTH, expand=True, padx=20, pady=10)
     # Creates scrollbar
     scrollbar = Scrollbar(frame)
     scrollbar.pack(side=RIGHT, fill=Y)
+
     # Creates listbox to display all booking with the system
     listbox = Listbox(frame, yscrollcommand=scrollbar.set, font=("Courier", 9))
     listbox.pack(fill=BOTH, expand=True)
@@ -589,7 +667,7 @@ def show_view_my_bookings():
             return
 
         selected_text = listbox.get(selection[0])
-        # Expect format "ID: details"
+        # ID: Details
         if ":" in selected_text:
             booking_id = selected_text.split(":", 1)[0].strip()
         else:
@@ -607,9 +685,10 @@ def show_view_my_bookings():
                         font=("Times New Roman", 12), bg="red", fg="white", command=cancel_selected)
     cancel_btn.pack(pady=10)
 
+
 def show_view_assigned_bookings():
     clear_window()
-    root.configure(bg="white")  
+    root.configure(bg="white")
     # Title
     title_label = Label(root, text="Assigned Bookings",
                         font=("Times New Roman", 20, "bold"), bg="white")
@@ -633,7 +712,6 @@ def show_view_assigned_bookings():
     else:
         listbox.insert(END, "You have no assigned trips.")
 
-
     # Back button
     back_btn = Button(root, text="Back", width=20, height=2,
                       font=("Times New Roman", 12),
@@ -643,7 +721,7 @@ def show_view_assigned_bookings():
 
 # This Function shows all booking with the system
 def show_all_bookings():
-    #clear_window()
+    clear_window()
     root.configure(bg="white")
 
     # Title
@@ -683,42 +761,70 @@ def show_all_bookings():
 
 # This Function shows the Assign Driver Screen
 def show_assign_driver():
-    #clear_window()
+    clear_window()
     root.configure(bg="white")
 
     # Title
     title_label = Label(root, text="Assign Driver to Booking",
                         font=("Times New Roman", 20, "bold"), bg="white")
-    title_label.pack(pady=20)
+    title_label.pack(pady=10)
 
-    # Creates page frame
+    # Creates frame for showing all bookings
+    bookings_frame = Frame(root, bg="white")
+    bookings_frame.pack(pady=10, padx=20, fill=BOTH, expand=True)
+
+    # Label for bookings list
+    Label(bookings_frame, text="Available Bookings:",
+          font=("Times New Roman", 12, "bold"), bg="white").pack(anchor=W, pady=5)
+
+    # Creates scrollbar for bookings
+    scrollbar = Scrollbar(bookings_frame)
+    scrollbar.pack(side=RIGHT, fill=Y)
+
+    # Creates listbox to display all bookings
+    listbox = Listbox(bookings_frame, yscrollcommand=scrollbar.set,
+                      font=("Courier", 9), height=10)
+    listbox.pack(fill=BOTH, expand=True)
+    scrollbar.config(command=listbox.yview)
+
+    # Displays all bookings from system
+    bookings = system.view_all_bookings()
+
+    # Adds bookings to listbox
+    if len(bookings) > 0:
+        for booking in bookings:
+            listbox.insert(END, booking)
+    else:
+        listbox.insert(END, "No bookings in the system.")
+
+    # Creates page frame for assignment fields
     page_frame = Frame(root, bg="white")
-    page_frame.pack(pady=20)
+    page_frame.pack(pady=10)
 
     # Booking ID field
     Label(page_frame, text="Booking ID:", font=("Times New Roman", 12, "bold"),
-          bg="white").grid(row=0, column=0, padx=10, pady=15)
+          bg="white").grid(row=0, column=0, padx=10, pady=10)
     booking_id_entry = Entry(page_frame, width=25, font=("Times New Roman", 12))
-    booking_id_entry.grid(row=0, column=1, padx=10, pady=15)
+    booking_id_entry.grid(row=0, column=1, padx=10, pady=10)
 
     # Label for Driver dropdown menu
     Label(page_frame, text="Driver:", font=("Times New Roman", 12, "bold"),
-          bg="white").grid(row=1, column=0, padx=10, pady=15)
+          bg="white").grid(row=1, column=0, padx=10, pady=10)
 
-    # Gets all Drivers from system
+    # Gets all Drivers within system
     drivers = system.get_all_drivers()
 
-    # Creates a list of Driver options
+    # Creates a list of Driver with their Driver ID and Full Name
     driver_options = []
     for driver in drivers:
         driver_text = driver['id'] + " - " + driver['name']
         driver_options.append(driver_text)
 
-    # Creates driver dropdown menu
+    # Creates Driver dropdown menu
     driver_var = StringVar()
     driver_menu = ttk.Combobox(page_frame, textvariable=driver_var,
                                values=driver_options, state="readonly", width=23)
-    driver_menu.grid(row=1, column=1, padx=10, pady=15)
+    driver_menu.grid(row=1, column=1, padx=10, pady=10)
 
     # Displays selection if Drivers exist
     if len(driver_options) > 0:
@@ -742,25 +848,25 @@ def show_assign_driver():
             messagebox.showerror("Error", "Please select a Driver!")
             return
 
-        # Pulls Driver ID from selection and uses " - "
+        # Pulls Driver ID from list using " - "
         parts = driver_selection.split(" - ")
         driver_id = parts[0]
 
         # Calls assign function
         success, message = system.assign_driver(booking_id=booking_id, driver_id=driver_id)
 
-        # Displays assignment result to Admin
+        # Displays Assignment result to Admin
         if success:
             messagebox.showinfo("Success", message)
-            show_admin_menu()
+            show_assign_driver()
         else:
             messagebox.showerror("Error", message)
 
     # Creates button frame
     button_frame = Frame(root, bg="white")
-    button_frame.pack(pady=20)
+    button_frame.pack(pady=10)
 
-    # Assign driver button
+    # Assign Driver button
     assign_btn = Button(button_frame, text="Assign Driver", width=15, height=2,
                         font=("Times New Roman", 12, "bold"),
                         bg="green", fg="white", command=assign_button)
@@ -771,7 +877,6 @@ def show_assign_driver():
                       font=("Times New Roman", 12),
                       bg="gray", fg="white", command=show_admin_menu)
     back_btn.pack(side=LEFT, padx=10)
-
 
 
 # Main Function which allows the application to start
