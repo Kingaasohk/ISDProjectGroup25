@@ -349,20 +349,20 @@ def get_all_drivers():
 
 
 # This Function generates  an Admin ID for admins and saves their details
-# No need for this again I believe
-def save_admin(name, email):
+# No need for this again I believe - Apiffany
+# def save_admin(name, email):
 
     # Generates a unique admin ID for each admin
-    try:
-        with open("admins.txt", "r") as file:
-            admin_id = str(sum(1 for line in file) + 1)
-    except FileNotFoundError:
-        admin_id = '1'
+    # try:
+    #     with open("admins.txt", "r") as file:
+    #         admin_id = str(sum(1 for line in file) + 1)
+    # except FileNotFoundError:
+    #     admin_id = '1'
 
-    with open("admins.txt", "a") as file:
-        file.write(f"{admin_id},{name},{email}\n")
+    # with open("admins.txt", "a") as file:
+    #     file.write(f"{admin_id},{name},{email}\n")
 
-    return admin_id
+    # return admin_id
 
 # This Function displays all booking within the system to Admins
 def view_all_bookings():
