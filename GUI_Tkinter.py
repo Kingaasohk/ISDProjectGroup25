@@ -342,8 +342,8 @@ def show_customer_menu():
     root.configure(bg="#34495E")
 
     # Title with Customer Username entered
-    title_label = Label(root, text="Customer Menu - Welcome " + current_username,
-                        font=("Times New Roman", 22, "bold"), bg="#34495E")
+    title_label = Label(root, text="Customer Menu - Welcome! " + current_username,
+                        font=("Times New Roman", 22, "bold"), bg="#34495E", fg="gold")
     title_label.pack(pady=30)
 
     # Book a Taxi button
@@ -372,7 +372,7 @@ def show_driver_menu():
 
     # Title with Driver Username entered
     title_label = Label(root, text="Driver Menu - Welcome! " + current_username,
-                        font=("Times New Roman", 22, "bold"), bg="#34495E")
+                        font=("Times New Roman", 22, "bold"), bg="#34495E", fg="gold")
     title_label.pack(pady=30)
 
     # View Assigned Bookings button
@@ -396,7 +396,7 @@ def show_admin_menu():
 
     # Title with Admin Username entered
     title_label = Label(root, text="Admin Menu - Welcome! " + current_username,
-                        font=("Times New Roman", 22, "bold"), bg="#34495E")
+                        font=("Times New Roman", 22, "bold"), bg="#34495E", fg="gold")
     title_label.pack(pady=30)
 
     # View All Bookings button
