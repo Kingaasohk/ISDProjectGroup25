@@ -445,13 +445,13 @@ def show_book_taxi():
     # Pickup Street Name
     Label(page_frame, text="Street Name:", font=("Times New Roman", 12, "bold"),
           bg="white").grid(row=2, column=0, sticky=W, pady=3, padx=10)
-    pickup_street = Entry(page_frame, width=40, font=("Times New Roman", 12))
+    pickup_street = Entry(page_frame, width=30, font=("Times New Roman", 12))
     pickup_street.grid(row=2, column=1, columnspan=3, sticky=W, pady=3)
 
     # Pickup City
     Label(page_frame, text="City:", font=("Times New Roman", 12, "bold"),
           bg="white").grid(row=3, column=0, sticky=W, pady=3, padx=10)
-    pickup_city = Entry(page_frame, width=40, font=("Times New Roman", 12))
+    pickup_city = Entry(page_frame, width=30, font=("Times New Roman", 12))
     pickup_city.grid(row=3, column=1, columnspan=3, sticky=W, pady=3)
 
     # Date and Time on same row
@@ -479,13 +479,13 @@ def show_book_taxi():
     # Drop-off Street Name
     Label(page_frame, text="Street Name:", font=("Times New Roman", 12, "bold"),
           bg="white").grid(row=7, column=0, sticky=W, pady=3, padx=10)
-    dropoff_street = Entry(page_frame, width=40, font=("Times New Roman", 12))
+    dropoff_street = Entry(page_frame, width=30, font=("Times New Roman", 12))
     dropoff_street.grid(row=7, column=1, columnspan=3, sticky=W, pady=3)
 
     # Drop-off City
     Label(page_frame, text="City:", font=("Times New Roman", 12, "bold"),
           bg="white").grid(row=8, column=0, sticky=W, pady=3, padx=10)
-    dropoff_city = Entry(page_frame, width=40, font=("Times New Roman", 12))
+    dropoff_city = Entry(page_frame, width=30, font=("Times New Roman", 12))
     dropoff_city.grid(row=8, column=1, columnspan=3, sticky=W, pady=3)
 
     # PASSENGER Details SECTION
@@ -496,7 +496,7 @@ def show_book_taxi():
     # Total Passengers
     Label(page_frame, text="Total Passengers:", font=("Times New Roman", 12, "bold"),
           bg="white").grid(row=10, column=0, sticky=W, pady=3, padx=10)
-    passengers_entry = Entry(page_frame, width=40, font=("Times New Roman", 12))
+    passengers_entry = Entry(page_frame, width=5, font=("Times New Roman", 12))
     passengers_entry.grid(row=10, column=1, columnspan=3, sticky=W, pady=3)
 
     # Adults and Children on same row
