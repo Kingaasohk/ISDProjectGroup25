@@ -38,3 +38,6 @@ Inside of a Terminal Shell or Command Prompt, navigate to the repository and exe
 ```bat
 python GUI_Tkinter.py
 ```
+
+### Important for accessing the Admin Menu
+You can put in any username in the login menu, but you **Have** to use the password 'ADMIN149' to log in. There is no registering of admins.
